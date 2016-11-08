@@ -13,13 +13,13 @@
 // ================================================
 
 // Possible CUDA extensions
-// #include "global_defines.cuh"
+#include "globalDefinitions.h"
 
 using namespace std;
 
 int main() {
 	//cuda_device_query();
-	int lx = 1000, ly = 1000, lz = 1000, nb_densities = 100;
+	int lx = 1000, ly = 1000, lz = 1000, nbDensities = 100;
 
 }
 
