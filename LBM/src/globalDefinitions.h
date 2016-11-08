@@ -4,4 +4,9 @@
  * Author: Roland Guichard
  */
 
-void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string fileName)
+#include<string>
+#include<iostream>
+
+using namespace std;
+
+void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string fileName);
