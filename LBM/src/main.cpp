@@ -20,9 +20,9 @@ using namespace std;
 int main() {
 	//cuda_device_query();
 	int lx = 1000, ly = 1000, lz = 1000, nbDensities = 100;
-	string fileName = "inputFile.txt";
-	void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string fileName);
-
+	string fileName = "LBMGeometry.inp";
+	readLBMGeometriesFromFile (lx, ly, lz, nbDensities, fileName);
+//	cout << fileName;
 
 }
 
