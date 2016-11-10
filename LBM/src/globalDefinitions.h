@@ -5,10 +5,11 @@
  */
 
 //#include<string>
-#include<iostream>
-#include<fstream>
-#include<vector>
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <stdlib.h>
 
 using namespace std;
 
-void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string fileName);
+void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string fileNameAndPath);
