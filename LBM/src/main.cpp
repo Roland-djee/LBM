@@ -20,12 +20,17 @@
 int main() {
 	//cuda_device_query();
 	int lx = 1000, ly = 1000, lz = 1000, nbDensities = 100;
+
 	string fileNameAndPath = "./input/LBMGeometry.inp";
+
 	readLBMGeometriesFromFile (lx, ly, lz, nbDensities, fileNameAndPath);
+
+	// Instantiate the LBM
+//	LBM myLBM( lx, ly, lz, 1.0,  1.0/3.0 , 1.0/18.0, 1.0/36.0, 1.0/3.0);
 //	cout << fileName;
-	cout << lx << endl;
-	cout << ly << endl;
-	cout << lz << endl;
-	cout << nbDensities << endl;
+//	cout << lx << endl;
+//	cout << ly << endl;
+//	cout << lz << endl;
+//	cout << nbDensities << endl;
 	return 0;
 }

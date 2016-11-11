@@ -13,3 +13,9 @@
 using namespace std;
 
 void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string fileNameAndPath);
+
+class LBM {
+	// Public variables
+public:
+	int blah;
+};
