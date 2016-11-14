@@ -6,15 +6,15 @@
 
 #include "globalDefinitions.h"
 
-void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string fileNameAndPath) {
+void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string filePathAndName) {
 
 	/*
 	 * Reads the input values from the LBMGeometry input file.
 	 */
 
 	vector<string> geometryParameters;
-//	ifstream configFileReader( fileNameAndPath.c_str() ); // Why c_str ?
-	ifstream configFileReader( fileNameAndPath );
+//	ifstream configFileReader( filePathAndName.c_str() ); // Why c_str ?
+	ifstream configFileReader( filePathAndName );
 	string buffer;
 
 	// Read lines from the file
@@ -39,12 +39,12 @@ void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, con
 		configFileReader.close();
 	}
 	else {
-		cout << "The file " << fileNameAndPath << " was not found" << endl;
+		cout << "The file " << filePathAndName << " was not found" << endl;
 		cout << "Create a new file in the ./input directory with 3 lines (one number on every line), each corresponding to the respective dimension of x, y and z." << endl;
 		// Exit the whole program with an error.
 		exit (-1);
 	}
-	cout << fileNameAndPath.c_str() <<  endl;
+	cout << filePathAndName.c_str() <<  endl;
 //	cout << 2;
 
 }
