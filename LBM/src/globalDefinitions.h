@@ -4,6 +4,10 @@
  * Author: Roland Guichard
  */
 
+// Guard
+#ifndef GLOBALDEFINITIONS_H
+#define GLOBALDEFINITIONS_H
+
 //#include<string>
 #include <iostream>
 #include <fstream>
@@ -12,10 +16,12 @@
 
 using namespace std;
 
-void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string fileNameAndPath);
+void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string filePathAndName);
 
 class LBM {
 	// Public variables
 public:
 	int blah;
 };
+
+#endif
