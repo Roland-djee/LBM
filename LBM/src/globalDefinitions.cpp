@@ -6,12 +6,57 @@
 
 #include "globalDefinitions.h"
 
-void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string filePathAndName) {
+lattice::lattice(int LX, int LY, int LZ):
+	lx(LX), ly(LY), lz(LZ)
+{
+}
 
+LBM::LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
+		 const float& T0, const float& T1, const float& T2, const float& CSQR):
+	// Initialisation list public variables
+	lx(LX), ly(LY), lz(LZ),
+	latticeNodes(lx*ly*lz),
+	noObstacleLatticesAtPenultimateXSlice(0),
+	threadsForStreamingCollisionAndRelaxation(512),
+	blocksForStreamingCollisionAndRelaxation(32),
+	sizeOfAllocatedSharedMemoryForStreamingCollisionAndRelaxation(48*1024),
+	convectiveBoundaryConditionsBlocks(32),
+	maxIterations(1000), checkStep(100),
+	timeElapsed(0.),
+	// Private variables
+	timeUnit(0),
+	twoDimensionalLength(ly*lz),
+	threeDimensionalLength(lx*ly*lz),
+	floatingSliceSize(twoDimensionalLength*sizeof(float)),
+	intArraySize(threeDimensionalLength*sizeof(int)),
+	nu(0.0175), rSmall(6.67897), reynoldsNb(195.732), s(23.7849), density(DENSITY),
+	prDiff(0.0), prOut(0.0), prIn(0.0), vor(0.0),
+	t0(density*T0), t1(density*T1), t2(density*T2), cSqr(), reciprocalCSqr(1.0/cSqr),
+	tau(3.0*nu + 0.5), omega(1.0/tau), oneMinusOmega (1.0-omega),
+	D3(lx, ly, lz), D3Help(lx, ly, lz)
+{
+}
+
+void LBM::createAnExampleConfigurationFile(const string exampleFileName) {
+	ofstream exampleFile( exampleFileName );
+	if (exampleFile.is_open()){
+		exampleFile << "10" << endl;
+		exampleFile << "100" << endl;
+		exampleFile << "0.0175" << endl;
+		exampleFile << "7" << endl;
+		exampleFile << "100" << endl;
+		exampleFile << "26" << endl;
+		exampleFile << "59" << endl;
+		exampleFile << "512" << endl;
+		exampleFile << "datum_design_case_name1" << endl;
+		exampleFile.close();
+	}
+}
+
+void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string filePathAndName) {
 	/*
 	 * Reads the input values from the LBMGeometry input file.
 	 */
-
 	vector<string> geometryParameters;
 //	ifstream configFileReader( filePathAndName.c_str() ); // Why c_str ?
 	ifstream configFileReader( filePathAndName );

@@ -25,12 +25,17 @@ int main() {
 
 	readLBMGeometriesFromFile (lx, ly, lz, nbDensities, filePathAndName);
 
+	cout << lx << endl;
+	cout << ly << endl;
+	cout << lz << endl;
+	cout << nbDensities << endl;
+
 	// Instantiate the LBM
+	LBM myLBM (lx, ly, lz, 1.0, 1.0/3.0, 1.0/18.0, 1.0/36.0, 1.0/3.0);
+	myLBM.createAnExampleConfigurationFile("exampleFielName.txt");
 //	LBM myLBM( lx, ly, lz, 1.0,  1.0/3.0 , 1.0/18.0, 1.0/36.0, 1.0/3.0);
 //	cout << fileName;
-//	cout << lx << endl;
-//	cout << ly << endl;
-//	cout << lz << endl;
-//	cout << nbDensities << endl;
+
+
 	return 0;
 }
