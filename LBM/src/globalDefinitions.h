@@ -19,10 +19,14 @@ using namespace std;
 void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string filePathAndName);
 
 class lattice {
-//	const int lx, ly, lz;
 public:
-	const int lx, ly, lz;
+	float *Q0, *Q1, *Q2, *Q3, *Q4, *Q5, *Q6, *Q7, *Q8, *Q9;
+	float *Q10, *Q11, *Q12, *Q13, *Q14, *Q15, *Q16, *Q17, *Q18;
 	lattice(int LX, int LY, int LZ);
+	lattice(int LX, int LY, int LZ, int dump);
+	~lattice();
+private:
+	int lx, ly, lz;
 };
 
 class LBM {
@@ -68,7 +72,7 @@ private:
 
 //
 	lattice D3, D3Help;
-//	lattice D3_d, D3_hlp_d;
+	lattice D3_d, D3Help_d;
 //
 //	// Pointers
 //	int *obstacles_d;
