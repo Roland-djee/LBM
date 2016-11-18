@@ -63,33 +63,34 @@ private:
 	const int floatingSliceSize;
 	const int intArraySize;
 //	int dataLocation; // 0-CPU, 1-GPU
-//
+
 
 	float nu, rSmall, reynoldsNb, s, density;
 	float prDiff, prOut, prIn, vor;
 	const float t0, t1, t2, cSqr, reciprocalCSqr;
 	const float tau, omega, oneMinusOmega;
 
-//
+	// Some instantiations
 	lattice D3, D3Help;
 	lattice D3_d, D3Help_d;
-//
-//	// Pointers
-//	int *obstacles_d;
-//
-//	float *uCurrent;
-//	float *vCurrent;
-//	float *wCurrent;
-//
-//	// uPreviousSpatialBoundary: at boundary - 1 (in x)
-//	float *uPreviousSpatialBoundary;
-//	float *vPreviousSpatialBoundary;
-//	float *wPreviousSpatialBoundary;
-//
-//	// uPreviousTemporalBoundary: at boundary - 1 (in time)
-//	float *uPreviousTemporalBoundary;
-//	float *vPreviousTemporalBoundary;
-//	float *wPreviousTemporalBoundary;
+
+	// Pointers
+	int *obstacles;
+	int *obstacles_d;
+
+	float *uCurrent;
+	float *vCurrent;
+	float *wCurrent;
+
+	// uPreviousSpatialBoundary: at boundary - 1 (in x)
+	float *uPreviousSpatialBoundary;
+	float *vPreviousSpatialBoundary;
+	float *wPreviousSpatialBoundary;
+
+	// uPreviousTemporalBoundary: at boundary - 1 (in time)
+	float *uPreviousTemporalBoundary;
+	float *vPreviousTemporalBoundary;
+	float *wPreviousTemporalBoundary;
 //
 //	float *uCurrent_d;
 //	float *uCurrentTemp_d;

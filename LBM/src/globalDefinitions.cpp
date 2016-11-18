@@ -122,7 +122,12 @@ LBM::LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
 	t0(density*T0), t1(density*T1), t2(density*T2), cSqr(), reciprocalCSqr(1.0/cSqr),
 	tau(3.0*nu + 0.5), omega(1.0/tau), oneMinusOmega (1.0-omega),
 	D3(lx, ly, lz), D3Help(lx, ly, lz),
-	D3_d(lx, ly, lz, 0), D3Help_d(lx, ly, lz, 0)
+	D3_d(lx, ly, lz, 0), D3Help_d(lx, ly, lz, 0),
+	// Pointers
+	obstacles(new int[lz*ly*lx]), obstacles_d(NULL),
+	uCurrent(new float[ly*lz]),  vCurrent(new float[ly*lz]),  wCurrent(new float[ly*lz]),
+	uPreviousSpatialBoundary(new float[ly*lz]), vPreviousSpatialBoundary(new float[ly*lz]), wPreviousSpatialBoundary(new float[ly*lz]),
+	uPreviousTemporalBoundary(new float[ly*lz]), vPreviousTemporalBoundary(new float[ly*lz]), wPreviousTemporalBoundary(new float[ly*lz])
 {
 }
 
