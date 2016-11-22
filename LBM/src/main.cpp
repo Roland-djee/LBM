@@ -32,7 +32,7 @@ int main() {
 
 	// Instantiate the LBM
 	LBM myLBM (lx, ly, lz, 1.0, 1.0/3.0, 1.0/18.0, 1.0/36.0, 1.0/3.0);
-	myLBM.createAnExampleConfigurationFile("exampleFielName.txt");
+//	myLBM.createAnExampleConfigurationFile("exampleFielName.txt");
 //	LBM myLBM( lx, ly, lz, 1.0,  1.0/3.0 , 1.0/18.0, 1.0/36.0, 1.0/3.0);
 //	cout << fileName;
 

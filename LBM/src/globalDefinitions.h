@@ -13,6 +13,7 @@
 #include <fstream>
 #include <vector>
 #include <stdlib.h>
+#include <ctime>
 
 using namespace std;
 
@@ -45,13 +46,13 @@ public:
 
 //	const string exampleFileName;
 	//Methods
-	void createAnExampleConfigurationFile(const string exampleFileName);
+
 
 	LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
 		const float& T0, const float& T1, const float& T2, const float& CSQR);
 //	~LBM();
 
-//	time_t timeStart, timeEnd;
+	time_t timeStart, timeEnd;
 
 private:
 	// Primary variables
@@ -91,43 +92,43 @@ private:
 	float *uPreviousTemporalBoundary;
 	float *vPreviousTemporalBoundary;
 	float *wPreviousTemporalBoundary;
-//
-//	float *uCurrent_d;
-//	float *uCurrentTemp_d;
-//	float *vCurrent_d;
-//	float *wCurrent_d;
-//
-//	// uPreviousSpatialBoundary: at boundary - 1 (in x)
-//	float *uPreviousSpatialBoundary_d;
-//	float *vPreviousSpatialBoundary_d;
-//	float *wPreviousSpatialBoundary_d;
-//
-//	// uPreviousTemporalBoundary: at boundary - 1 (in time)
-//	float *uPreviousTemporalBoundary_d;
-//	float *vPreviousTemporalBoundary_d;
-//	float *wPreviousTemporalBoundary_d;
-//
-//	float *tempCPU_uCurrent_d;
-//	float *tempCPU_vCurrent_d;
-//	float *tempCPU_wCurrent_d;
-//
-//	float *tempCPU_uPreviousTemporalBoundary_d;
-//	float *tempCPU_vPreviousTemporalBoundary_d;
-//	float *tempCPU_wPreviousTemporalBoundary_d;
-//
-//	float *tempCPU_uPreviousSpatialBoundary_d;
-//	float *tempCPU_vPreviousSpatialBoundary_d;
-//	float *tempCPU_wPreviousSpatialBoundary_d;
-//
-//	float *tempCheckDensity_d;
-//	float *tempCheckDensity_d_full;
-//
-//	//host memories - for saving the final results
-//	float *Ux, *Uy, *Uz, *Pressure, *Wx, *Wy, *Wz;
 
+	float *uCurrent_d;
+	float *uCurrentTemp_d;
+	float *vCurrent_d;
+	float *wCurrent_d;
 
+	// uPreviousSpatialBoundary: at boundary - 1 (in x)
+	float *uPreviousSpatialBoundary_d;
+	float *vPreviousSpatialBoundary_d;
+	float *wPreviousSpatialBoundary_d;
 
+	// uPreviousTemporalBoundary: at boundary - 1 (in time)
+	float *uPreviousTemporalBoundary_d;
+	float *vPreviousTemporalBoundary_d;
+	float *wPreviousTemporalBoundary_d;
 
+	float *tempCPU_uCurrent_d;
+	float *tempCPU_vCurrent_d;
+	float *tempCPU_wCurrent_d;
+
+	float *tempCPU_uPreviousTemporalBoundary_d;
+	float *tempCPU_vPreviousTemporalBoundary_d;
+	float *tempCPU_wPreviousTemporalBoundary_d;
+
+	float *tempCPU_uPreviousSpatialBoundary_d;
+	float *tempCPU_vPreviousSpatialBoundary_d;
+	float *tempCPU_wPreviousSpatialBoundary_d;
+
+	float *tempCheckDensity_d;
+	float *tempCheckDensity_d_full;
+
+	//host memories - for saving the final results
+	float *Ux, *Uy, *Uz, *Pressure, *Wx, *Wy, *Wz;
+
+	//Methods
+	void createAnExampleConfigurationFile(const string exampleFileName);
+	void readExternalConfigurationFileForTheSolver(const string filename);
 
 };
 

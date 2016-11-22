@@ -7,8 +7,8 @@
 #include "globalDefinitions.h"
 
 // Lattice constructor. Note there is no initialisation list.
-lattice::lattice(int LX, int LY, int LZ)
-{
+lattice::lattice(int LX, int LY, int LZ):
+	lx(LX), ly(LY), lz(LZ) {
 	Q0 = new float[lz*ly*lx];
 	Q1 = new float[lz*ly*lx];
 	Q2 = new float[lz*ly*lx];
@@ -31,7 +31,8 @@ lattice::lattice(int LX, int LY, int LZ)
 }
 
 // Lattice constructor overloaded
-lattice::lattice(int LX, int LY, int LZ, int dump) {
+lattice::lattice(int LX, int LY, int LZ, int dump):
+	lx(LX), ly(LY), lz(LZ){
 	Q0 = new float[lz*ly*lx];
 	Q1 = new float[lz*ly*lx];
 	Q2 = new float[lz*ly*lx];
@@ -127,8 +128,41 @@ LBM::LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
 	obstacles(new int[lz*ly*lx]), obstacles_d(NULL),
 	uCurrent(new float[ly*lz]),  vCurrent(new float[ly*lz]),  wCurrent(new float[ly*lz]),
 	uPreviousSpatialBoundary(new float[ly*lz]), vPreviousSpatialBoundary(new float[ly*lz]), wPreviousSpatialBoundary(new float[ly*lz]),
-	uPreviousTemporalBoundary(new float[ly*lz]), vPreviousTemporalBoundary(new float[ly*lz]), wPreviousTemporalBoundary(new float[ly*lz])
-{
+	uPreviousTemporalBoundary(new float[ly*lz]), vPreviousTemporalBoundary(new float[ly*lz]), wPreviousTemporalBoundary(new float[ly*lz]),
+	uCurrent_d(NULL), uCurrentTemp_d(NULL), vCurrent_d(NULL), wCurrent_d(NULL),
+	uPreviousSpatialBoundary_d(NULL), vPreviousSpatialBoundary_d(NULL), wPreviousSpatialBoundary_d(NULL),
+	uPreviousTemporalBoundary_d(NULL),vPreviousTemporalBoundary_d(NULL), wPreviousTemporalBoundary_d(NULL),
+	tempCPU_uCurrent_d(NULL), tempCPU_vCurrent_d(NULL), tempCPU_wCurrent_d(NULL),
+	tempCPU_uPreviousTemporalBoundary_d(NULL), tempCPU_vPreviousTemporalBoundary_d(NULL), tempCPU_wPreviousTemporalBoundary_d(NULL),
+	tempCPU_uPreviousSpatialBoundary_d(NULL), tempCPU_vPreviousSpatialBoundary_d(NULL), tempCPU_wPreviousSpatialBoundary_d(NULL),
+	tempCheckDensity_d(NULL), tempCheckDensity_d_full(NULL),
+	Ux(new float[lx*ly*lz]),
+	Uy(new float[lx*ly*lz]),
+	Uz(new float[lx*ly*lz]),
+	Pressure(new float[lx*ly*lz]),
+	Wx(new float[lx*ly*lz]),
+	Wy(new float[lx*ly*lz]),
+	Wz(new float[lx*ly*lz]) {
+
+	cout << "***LBM Starting***" << endl;
+
+	time (&timeStart);
+
+	readExternalConfigurationFileForTheSolver("./input/LBM2Configuration.txt");
+}
+
+void LBM::readExternalConfigurationFileForTheSolver(const string filename) {
+	vector<string> configurationParameters;
+	ifstream configurationFile(filename.c_str());
+	string buffer;
+	if(configurationFile.is_open()){
+		while (configurationFile >> buffer) {
+			configurationParameters.push_back(buffer);
+		}
+		cout << "Configuration Parameters Read:" << endl;
+		maxIterations = atoi(configurationParameters[0].c_str());
+		cout << "\t Max iterations: " << maxIterations << endl;
+	}
 }
 
 void LBM::createAnExampleConfigurationFile(const string exampleFileName) {
