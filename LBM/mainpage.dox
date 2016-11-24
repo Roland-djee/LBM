@@ -1,0 +1,21 @@
+/*! \mainpage Lattice-Boltzmann code in C++
+ *   	
+ *
+ * \section intro_sec Introduction
+ *
+ * This is a Lattice-Boltzmann code developed in C++ and intended to use CPU parallelism (OpenMP, MPI) 
+ * and GPU acceleration (OpenACC, CUDA). It is largely inspired from the C++ code by Dr. Christos Tsotskas, 
+ * which itself comes from the Fortran code by Prof. Djenidi.
+ * 
+ * \section requirements Requirements
+ * 
+ *
+ * \section install_sec Installation
+ * @code example git clone @endcode
+ * the GitHub repository.
+ *
+ * \subsection step1 Step 1: Opening the box
+ *
+ * \subsection contact Contact: 
+ *  Dr. Roland Guichard <r.guichard@ucl.ac.uk>
+ */
