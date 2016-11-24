@@ -6,8 +6,12 @@
 
 #include "globalDefinitions.h"
 
-// Lattice constructor. Note there is no initialisation list.
 lattice::lattice(int LX, int LY, int LZ):
+
+	/*
+	 * Lattice constructor. Note there is no initialisation list.
+	 */
+
 	lx(LX), ly(LY), lz(LZ) {
 	Q0 = new float[lz*ly*lx];
 	Q1 = new float[lz*ly*lx];
@@ -30,8 +34,12 @@ lattice::lattice(int LX, int LY, int LZ):
 	Q18 = new float[lz*ly*lx];
 }
 
-// Lattice constructor overloaded
 lattice::lattice(int LX, int LY, int LZ, int dump):
+
+	/*
+	 * Lattice constructor overloaded
+	 */
+
 	lx(LX), ly(LY), lz(LZ){
 	Q0 = new float[lz*ly*lx];
 	Q1 = new float[lz*ly*lx];
@@ -75,8 +83,12 @@ lattice::lattice(int LX, int LY, int LZ, int dump):
 	//		cudaMalloc((void **)&Q18, FLOATING_array_size);
 }
 
-// Destructor
 lattice::~lattice() {
+
+	/*
+	 * Lattice destructor
+	 */
+
 	delete [] Q0;
 	delete [] Q1;
 	delete [] Q2;
@@ -102,7 +114,11 @@ lattice::~lattice() {
 
 LBM::LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
 		 const float& T0, const float& T1, const float& T2, const float& CSQR):
-	// Initialisation list public variables
+
+	/**
+	 * LBM constructor
+	 */
+
 	lx(LX), ly(LY), lz(LZ),
 	latticeNodes(lx*ly*lz),
 	noObstacleLatticesAtPenultimateXSlice(0),
@@ -112,7 +128,7 @@ LBM::LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
 	convectiveBoundaryConditionsBlocks(32),
 	maxIterations(1000), checkStep(100),
 	timeElapsed(0.),
-	// Private variables
+	/* Private variables */
 	timeUnit(0),
 	twoDimensionalLength(ly*lz),
 	threeDimensionalLength(lx*ly*lz),
@@ -124,7 +140,7 @@ LBM::LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
 	tau(3.0*nu + 0.5), omega(1.0/tau), oneMinusOmega (1.0-omega),
 	D3(lx, ly, lz), D3Help(lx, ly, lz),
 	D3_d(lx, ly, lz, 0), D3Help_d(lx, ly, lz, 0),
-	// Pointers
+	/* Pointers */
 	obstacles(new int[lz*ly*lx]), obstacles_d(NULL),
 	uCurrent(new float[ly*lz]),  vCurrent(new float[ly*lz]),  wCurrent(new float[ly*lz]),
 	uPreviousSpatialBoundary(new float[ly*lz]), vPreviousSpatialBoundary(new float[ly*lz]), wPreviousSpatialBoundary(new float[ly*lz]),
@@ -148,10 +164,59 @@ LBM::LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
 
 	time (&timeStart);
 
-	readExternalConfigurationFileForTheSolver("./input/LBM2Configuration.txt");
+	readExternalConfigurationFileForTheSolver("./input/LBMConfiguration.inp");
+
+	resetConvergenceFile();
+
+//	calculate_CUDA_quantities();
+//	display_CUDA_specifications();
+
+	initialiseAllDataArrays();
+	displayLBMSpecifications();
+//	abstract_initialise();
+}
+
+void LBM::initialiseAllDataArrays() {
+
+	/* Calls all the initialisations and allocations */
+
+	initialiseHostData();
+	allocateDeviceArrays();
+	initialiseDeviceData();
+}
+
+void LBM::initialiseHostData() {
+
+}
+
+void LBM::allocateDeviceArrays() {
+
+}
+
+void LBM::initialiseDeviceData() {
+
+}
+
+void LBM::resetConvergenceFile() {
+
+	/* Delete and create a new LBMConvergence.dat file */
+
+	if ( remove("./output/LBMConvergence.dat") != 0 ) cout << "Couldn't delete LBMConvergence.dat" << endl;
+	else cout << "Create LBMConvergence.dat" << endl;
+
+	ofstream convergenceFile("./output/LBMConvergence.dat");
+
+	convergenceFile << "# Iteration \t Convergence value" << endl;
+	convergenceFile.close();
+
 }
 
 void LBM::readExternalConfigurationFileForTheSolver(const string filename) {
+
+	/*
+	 * Reads the input values from the LBMGeometry input file.
+	 */
+
 	vector<string> configurationParameters;
 	ifstream configurationFile(filename.c_str());
 	string buffer;
@@ -159,13 +224,46 @@ void LBM::readExternalConfigurationFileForTheSolver(const string filename) {
 		while (configurationFile >> buffer) {
 			configurationParameters.push_back(buffer);
 		}
-		cout << "Configuration Parameters Read:" << endl;
+		cout << "Configuration parameters read from: " << filename.c_str() << endl;
 		maxIterations = atoi(configurationParameters[0].c_str());
 		cout << "\t Max iterations: " << maxIterations << endl;
+
+		/* Check step: perform density check and export */
+		checkStep = atoi(configurationParameters[1].c_str());
+		cout << "\t Check step: " << checkStep << endl;
+
+		nu = atof(configurationParameters[2].c_str());
+		cout << "\t nu: " << nu << endl;
+
+		rSmall = atof(configurationParameters[3].c_str());
+		cout << "\t rSmall: " << rSmall << endl;
+
+		reynoldsNb = atof(configurationParameters[4].c_str());
+		cout << "\t reynoldsNb: " << reynoldsNb << endl;
+
+		s = atof(configurationParameters[5].c_str());
+		cout << "\t s: " << s << endl;
+
+		baffle = atoi(configurationParameters[6].c_str());
+		cout << "\t baffle position on X=" << baffle << endl;
+
+		threadsPerKernel = atoi(configurationParameters[7].c_str());
+		cout << "\t CUDA threads per kernel: " << threadsPerKernel << endl;
+
+		caseName = configurationParameters[8].c_str();
+		cout << "Case: " << caseName << endl;
+
+		cout << "In total: " << configurationParameters.size() << " parameters were read" << endl;
+		configurationFile.close();
 	}
 }
 
 void LBM::createAnExampleConfigurationFile(const string exampleFileName) {
+
+	/*
+     * Reads the input values from the LBMGeometry input file.
+     */
+
 	ofstream exampleFile( exampleFileName );
 	if (exampleFile.is_open()){
 		exampleFile << "10" << endl;
@@ -182,12 +280,14 @@ void LBM::createAnExampleConfigurationFile(const string exampleFileName) {
 }
 
 void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string filePathAndName) {
+
 	/*
 	 * Reads the input values from the LBMGeometry input file.
 	 */
+
 	vector<string> geometryParameters;
-//	ifstream configFileReader( filePathAndName.c_str() ); // Why c_str ?
-	ifstream configFileReader( filePathAndName );
+	ifstream configFileReader( filePathAndName.c_str() ); // Why c_str ?
+//	ifstream configFileReader( filePathAndName );
 	string buffer;
 
 	// Read lines from the file
@@ -195,7 +295,7 @@ void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, con
 		while (configFileReader >> buffer) {
 			geometryParameters.push_back(buffer);
 		}
-		cout << "Geometry parameters read:" << endl;
+		cout << "Geometry parameters read from: " << filePathAndName.c_str() << endl;
 		lx = atoi(geometryParameters[0].c_str());
 		cout << "\t Domain length in x: " << lx << endl;
 
@@ -217,7 +317,7 @@ void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, con
 		// Exit the whole program with an error.
 		exit (-1);
 	}
-	cout << filePathAndName.c_str() <<  endl;
+//	cout << filePathAndName.c_str() <<  endl;
 //	cout << 2;
 
 }

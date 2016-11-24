@@ -20,20 +20,27 @@ using namespace std;
 void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string filePathAndName);
 
 class lattice {
+
 public:
+
 	float *Q0, *Q1, *Q2, *Q3, *Q4, *Q5, *Q6, *Q7, *Q8, *Q9;
 	float *Q10, *Q11, *Q12, *Q13, *Q14, *Q15, *Q16, *Q17, *Q18;
 	lattice(int LX, int LY, int LZ);
 	lattice(int LX, int LY, int LZ, int dump);
 	~lattice();
+
 private:
+
 	int lx, ly, lz;
+
 };
 
 class LBM {
 
 public:
-	// Primary Variables
+
+	/* Primary Variables */
+
 	const int lx, ly, lz;
 	const int latticeNodes;
 	int noObstacleLatticesAtPenultimateXSlice;
@@ -44,20 +51,22 @@ public:
 	int maxIterations, checkStep;
 	float timeElapsed;
 
-//	const string exampleFileName;
-	//Methods
+	time_t timeStart, timeEnd;
 
+	/* Methods */
 
 	LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
 		const float& T0, const float& T1, const float& T2, const float& CSQR);
-//	~LBM();
+	~LBM();
 
-	time_t timeStart, timeEnd;
+
 
 private:
-	// Primary variables
-//	int baffle;
-//	int threadsPerKernel;
+
+	/* Primary variables */
+
+	int baffle;
+	int threadsPerKernel;
 	int timeUnit;
 	int twoDimensionalLength;
 	int threeDimensionalLength;
@@ -71,11 +80,13 @@ private:
 	const float t0, t1, t2, cSqr, reciprocalCSqr;
 	const float tau, omega, oneMinusOmega;
 
-	// Some instantiations
+	/* Instantiations */
+
 	lattice D3, D3Help;
 	lattice D3_d, D3Help_d;
 
-	// Pointers
+	/* Pointers */
+
 	int *obstacles;
 	int *obstacles_d;
 
@@ -126,9 +137,22 @@ private:
 	//host memories - for saving the final results
 	float *Ux, *Uy, *Uz, *Pressure, *Wx, *Wy, *Wz;
 
-	//Methods
+	string caseName;
+
+	/* Methods */
 	void createAnExampleConfigurationFile(const string exampleFileName);
 	void readExternalConfigurationFileForTheSolver(const string filename);
+	void resetConvergenceFile();
+
+//	void calculateCUDAQuantities();
+//	void displayCUDASpecifications();
+	void displayLBMSpecifications();
+
+	/* The first method calls the three next */
+	void initialiseAllDataArrays();
+	void allocateDeviceArrays();
+	void initialiseHostData();
+	void initialiseDeviceData();
 
 };
 
