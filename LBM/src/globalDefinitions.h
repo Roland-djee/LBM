@@ -1,7 +1,8 @@
 /**
- * Description: Header for global definitions.
- * Created: 8 Nov. 2016
- * Author: Roland Guichard
+ * @file globalDefinitions.h
+ * @brief Header for global definitions.
+ * @date 8 Nov. 2016
+ * @author Roland Guichard
  */
 
 // Guard
@@ -15,6 +16,8 @@
 #include <stdlib.h>
 #include <ctime>
 
+#define index(z,y,x) (z)*ly*lx+(y)*lx+(x)
+
 using namespace std;
 
 void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string filePathAndName);
@@ -23,6 +26,7 @@ class lattice {
 
 public:
 
+	/* Defining the velocities */
 	float *Q0, *Q1, *Q2, *Q3, *Q4, *Q5, *Q6, *Q7, *Q8, *Q9;
 	float *Q10, *Q11, *Q12, *Q13, *Q14, *Q15, *Q16, *Q17, *Q18;
 	lattice(int LX, int LY, int LZ);
@@ -58,8 +62,6 @@ public:
 	LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
 		const float& T0, const float& T1, const float& T2, const float& CSQR);
 	~LBM();
-
-
 
 private:
 
@@ -146,13 +148,22 @@ private:
 
 //	void calculateCUDAQuantities();
 //	void displayCUDASpecifications();
-	void displayLBMSpecifications();
 
-	/* The first method calls the three next */
+	/* The first method calls the next three */
 	void initialiseAllDataArrays();
 	void allocateDeviceArrays();
 	void initialiseHostData();
 	void initialiseDeviceData();
+
+	void displayLBMSpecifications();
+
+	/* The first method calls the next three */
+	void abstractInitialise();
+	void initialiseMicroscopicDensityArraysInTheHost();
+	/* The following method calls the next */
+	int calculateMacroscopicDensityInTheHost(float& density);
+		float sumMicroscopicDensitiesForSingleNode(const int x, const int y, const int z);
+	void createReactorGeometryInTheHost();
 
 };
 

@@ -3,19 +3,32 @@
  *
  * \section intro_sec Introduction
  *
- * This is a Lattice-Boltzmann code developed in C++ and intended to use CPU parallelism (OpenMP, MPI) 
+ * This is a Single Component Single Phase (SCSP) D3Q19 class Lattice-Boltzmann code developed in C++ and intended to use CPU parallelism (OpenMP, MPI) 
  * and GPU acceleration (OpenACC, CUDA). It is largely inspired from the C++ code by Dr. Christos Tsotskas, 
- * which itself comes from the Fortran code by Prof. Djenidi.
+ * which itself comes from the Fortran code by Prof. Djenidi (University of Newcastle, Australia).
  * 
  * \section requirements Requirements
- * 
+ * This code has been developed under Eclipse/CDT with the gcc compiler. The documentation is auto-generated using Doxygen.
+ * Software requirements are:
+ *	- Eclipse/CDT
+ *  - Git
+ *	- GCC
+ *  - Doxygen and <a href="http://www.mantidproject.org/Eclipse_Doxygen_Setup">Eclox </a>
+ *  - 
+ *
  *
  * \section install_sec Installation
- * @code example git clone @endcode
- * the GitHub repository.
+ * Clone the GitHub repository:
+ * @code git clone https://github.com/UCLGuichard/LBM.git @endcode
+ * 
  *
- * \subsection step1 Step 1: Opening the box
+ * \section documentation Generating the documentation
+ * The simplest is to use Eclox plug-in for Eclipse. Open the LBM.doxyfile and press the blue \@ button to build it.
+ * This will generate the documentation both in pdf (Latex) and html in the respective folders. Open the latter with your web browser.
  *
- * \subsection contact Contact: 
- *  Dr. Roland Guichard <r.guichard@ucl.ac.uk>
+ *
+ * \section step1 Step 1: Opening the box
+ *
+ * \section contact Contact: 
+ * Dr. Roland Guichard r.guichard@ucl.ac.uk
  */
