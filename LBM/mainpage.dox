@@ -1,4 +1,4 @@
-/*! \mainpage Lattice-Boltzmann code in C++
+/*! \mainpage Lattice-Boltzmann Method code in C++ for mesoscopic fluid dynamics
  *   	
  *
  * \section intro_sec Introduction
@@ -14,7 +14,6 @@
  *  - Git
  *	- GCC
  *  - Doxygen and <a href="http://www.mantidproject.org/Eclipse_Doxygen_Setup">Eclox </a>
- *  - 
  *
  *
  * \section install_sec Installation
@@ -27,8 +26,28 @@
  * This will generate the documentation both in pdf (Latex) and html in the respective folders. Open the latter with your web browser.
  *
  *
- * \section step1 Step 1: Opening the box
+ * \section testing Unit testing using googletest
+ * Unit tests are developed in the UnitTest folder. In order to run them and avoid conflicting two main functions 
+ * (one for the LBM app and the other for testing) simply exclude the main.cpp from the build for running the tests.
+ * Then, check the gtest and include folders to the UnitTest path:
+ * @code
+ * UnitTest >> right-click >> Properties >> C/C++ Build >> Settings >> C++ Compiler >> Includes >> Includepaths (-l) >> workspace (and gtest and include and any folder you may need to include for testing)
+ * @endcode
+ * Check the gtest folder to the gtest path:
+ * @code
+ * gtest >> right-click >> Properties >> C/C++ Build >> Settings >> C++ Compiler >> Includes >> Includepaths (-l) >> workspace (and gtest)
+ * @endcode
  *
+ * \section building Building the code
+ * Check the include folder to the src path:
+ * @code
+ * src >> right-click >> Properties >> C/C++ Build >> Settings >> C++ Compiler >> Includes >> Includepaths (-l) >> workspace (include and any folder you may need to include for building)
+ * @endcode
+ *
+ * \section licence Licence
+ *
+ * \section contribution Contribution
+ * 
  * \section contact Contact: 
  * Dr. Roland Guichard r.guichard@ucl.ac.uk
  */

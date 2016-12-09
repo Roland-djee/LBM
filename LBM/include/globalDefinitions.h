@@ -22,6 +22,10 @@ using namespace std;
 
 void readLBMGeometriesFromFile (int &lx, int &ly, int &lz, int &nbDensities, const string filePathAndName);
 
+void readExternalConfigurationFileForTheSolver(int& maxIterations, int& checkStep, float& nu,
+		float& rSmall, float& reynoldsNb, float& s, int& baffle, int& threadsPerKernel,
+		string& caseName, const string filename);
+
 class lattice {
 
 public:
@@ -52,23 +56,34 @@ public:
 	int blocksForStreamingCollisionAndRelaxation;
 	int sizeOfAllocatedSharedMemoryForStreamingCollisionAndRelaxation;
 	int convectiveBoundaryConditionsBlocks;
-	int maxIterations, checkStep;
+	int maxIterations;
+	int checkStep;
+	int baffle;
+	int threadsPerKernel;
 	float timeElapsed;
+	float nu;
+	float rSmall;
+	float reynoldsNb;
+	float s;
+
+	string caseName;
 
 	time_t timeStart, timeEnd;
 
 	/* Methods */
 
-	LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
-		const float& T0, const float& T1, const float& T2, const float& CSQR);
+	LBM(const int& LX, const int& LY, const int& LZ, const int& MAXITERATIONS,
+			const int& CHECKSTEP, const float& NU, const float& RSMALL,
+			const float& REYNOLDSNB, const float& S, const int& BAFFLE,
+			const int& THREADSPERKERNEL, const string& CASENAME,
+			const float& DENSITY, const float& T0, const float& T1,
+			const float& T2, const float& CSQR);
+
 	~LBM();
 
 private:
 
 	/* Primary variables */
-
-	int baffle;
-	int threadsPerKernel;
 	int timeUnit;
 	int twoDimensionalLength;
 	int threeDimensionalLength;
@@ -77,7 +92,7 @@ private:
 //	int dataLocation; // 0-CPU, 1-GPU
 
 
-	float nu, rSmall, reynoldsNb, s, density;
+	float density;
 	float prDiff, prOut, prIn, vor;
 	const float t0, t1, t2, cSqr, reciprocalCSqr;
 	const float tau, omega, oneMinusOmega;
@@ -139,11 +154,8 @@ private:
 	//host memories - for saving the final results
 	float *Ux, *Uy, *Uz, *Pressure, *Wx, *Wy, *Wz;
 
-	string caseName;
-
 	/* Methods */
 	void createAnExampleConfigurationFile(const string exampleFileName);
-	void readExternalConfigurationFileForTheSolver(const string filename);
 	void resetConvergenceFile();
 
 //	void calculateCUDAQuantities();

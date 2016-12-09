@@ -24,26 +24,40 @@ int main() {
 	 */
 
 	/* Declare and initialise domain values */
-	int lx = 1000;
-	int ly = 1000;
-	int lz = 1000;
-	int nbDensities = 100;
-
+	int lx { };
+	int ly { };
+	int lz { };
+	int nbDensities { };
 	/* Input file */
 	string filePathAndName = "./input/LBMGeometry.inp";
-
 	/* Read the LBMGeometry.inp file, lx, ly, lz will be updated */
 	readLBMGeometriesFromFile (lx, ly, lz, nbDensities, filePathAndName);
 
+	/* Declare and initialise domain values */
+	int maxIterations { };
+	int checkStep { };
+	float nu { };
+	float rSmall { };
+	float reynoldsNb { };
+	float s { };
+	int baffle { };
+	int threadsPerKernel{ };
+	string caseName { };
+	/* Input file */
+	string filePathAndName = "./input/LBMConfiguration.inp";
+	readExternalConfigurationFileForTheSolver(maxIterations, checkStep, nu, rSmall,
+			reynoldsNb, s, baffle, threadsPerKernel, caseName, filePathAndName);
+
 	/* Instantiate and run the LBM */
+	float density { 1.0 };
+	float t0      { 1.0/3.0 };
+	float t1      { 1.0/18.0 };
+	float t2      { 1.0/36.0 };
+	float cSqr    { 1.0/3.0 };
 
-	float density = 1.0;
-	float t0      = 1.0/3.0;
-	float t1      = 1.0/18.0;
-	float t2      = 1.0/36.0;
-	float cSqr    = 1.0/3.0;
-
-	LBM myLBM (lx, ly, lz, density, t0, t1, t2, cSqr);
+	LBM myLBM (lx, ly, lz, maxIterations, checkStep, nu, rSmall,
+			reynoldsNb, s, baffle, threadsPerKernel, caseName,
+			density, t0, t1, t2, cSqr);
 //	myLBM.createAnExampleConfigurationFile("exampleFielName.txt");
 //	LBM myLBM( lx, ly, lz, 1.0,  1.0/3.0 , 1.0/18.0, 1.0/36.0, 1.0/3.0);
 //	cout << fileName;

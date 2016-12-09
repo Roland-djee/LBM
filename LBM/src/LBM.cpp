@@ -7,14 +7,26 @@
 
 #include "globalDefinitions.h"
 
-LBM::LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
-		 const float& T0, const float& T1, const float& T2, const float& CSQR):
-
+LBM::LBM(const int& LX, const int& LY, const int& LZ, const int& MAXITERATIONS,
+		const int& CHECKSTEP, const float& NU, const float& RSMALL,
+		const float& REYNOLDSNB, const float& S, const int& BAFFLE,
+		const int& THREADSPERKERNEL, const string& CASENAME,
+		const float& DENSITY, const float& T0, const float& T1,
+		const float& T2, const float& CSQR):
 	/**
 	 * @brief LBM constructor. Initialise all necessary class members
 	 * @param LX (const int) domain dimension in x-coordinate
 	 * @param LY (const int) domain dimension in y-coordinate
 	 * @param LZ (const int) domain dimension in z-coordinate
+	 * @param MAXITERATIONS (const int) Maximum iterations
+	 * @param CHECKSTEP (const int) check step
+	 * @param NU (const float)
+	 * @param RSMALL (const float)
+	 * @param REYNOLDSNB (const float) Reynolds Number
+	 * @param S (const float)
+	 * @param BAFFLE (const int)
+	 * @param THREADSPERKERNEL (const int)
+	 * @param CASENAME (const string)
 	 * @param DENSITY (const flt)
 	 * @param T0 (const flt)
 	 * @param T1 (const flt)
@@ -22,53 +34,96 @@ LBM::LBM(const int& LX, const int& LY, const int& LZ, const float& DENSITY,
 	 * @param CSQR (const flt)
 	 * @return none
 	 */
-
-	lx(LX), ly(LY), lz(LZ),
-	latticeNodes(lx*ly*lz),
-	noObstacleLatticesAtPenultimateXSlice(0),
-	threadsForStreamingCollisionAndRelaxation(512),
-	blocksForStreamingCollisionAndRelaxation(32),
-	sizeOfAllocatedSharedMemoryForStreamingCollisionAndRelaxation(48*1024),
-	convectiveBoundaryConditionsBlocks(32),
-	maxIterations(1000), checkStep(100),
-	timeElapsed(0.),
+	lx { LX },
+	ly { LY },
+	lz { LZ },
+	latticeNodes { lx * ly * lz },
+	noObstacleLatticesAtPenultimateXSlice { 0 },
+	threadsForStreamingCollisionAndRelaxation { 512 },
+	blocksForStreamingCollisionAndRelaxation { 32 },
+	sizeOfAllocatedSharedMemoryForStreamingCollisionAndRelaxation { 48 * 1024 },
+	convectiveBoundaryConditionsBlocks { 32 },
+	maxIterations { MAXITERATIONS },
+	checkStep { CHECKSTEP },
+	baffle { BAFFLE },
+	threadsPerKernel { THREADSPERKERNEL },
+	timeElapsed { 0. },
+	nu { NU },
+	rSmall { RSMALL },
+	reynoldsNb { REYNOLDSNB },
+	s { S },
+	caseName { CASENAME },
 	/* Private variables */
-	timeUnit(0),
-	twoDimensionalLength(ly*lz),
-	threeDimensionalLength(lx*ly*lz),
+	timeUnit { 0 },
+	twoDimensionalLength { ly * lz },
+	threeDimensionalLength { lx * ly * lz },
 	floatingSliceSize(twoDimensionalLength*sizeof(float)),
 	intArraySize(threeDimensionalLength*sizeof(int)),
-	nu(0.0175), rSmall(6.67897), reynoldsNb(195.732), s(23.7849), density(DENSITY),
-	prDiff(0.0), prOut(0.0), prIn(0.0), vor(0.0),
-	t0(density*T0), t1(density*T1), t2(density*T2), cSqr(), reciprocalCSqr(1.0/cSqr),
-	tau(3.0*nu + 0.5), omega(1.0/tau), oneMinusOmega (1.0-omega),
-	D3(lx, ly, lz), D3Help(lx, ly, lz),
-	D3_d(lx, ly, lz, 0), D3Help_d(lx, ly, lz, 0),
+//	nu(0.0175),
+//	rSmall(6.67897),
+//	reynoldsNb(195.732),
+//	s(23.7849),
+	density(DENSITY),
+	prDiff(0.0),
+	prOut(0.0),
+	prIn(0.0),
+	vor(0.0),
+	t0 { density * T0 },
+	t1 { density * T1 },
+	t2 { density * T2 },
+	cSqr(),
+	reciprocalCSqr(1.0 / cSqr),
+	tau(3.0*nu + 0.5),
+	omega(1.0/tau),
+	oneMinusOmega (1.0-omega),
+	D3(lx, ly, lz),
+	D3Help(lx, ly, lz),
+	D3_d(lx, ly, lz, 0),
+	D3Help_d(lx, ly, lz, 0),
 	/* Pointers */
-	obstacles(new int[lz*ly*lx]), obstacles_d(NULL),
-	uCurrent(new float[ly*lz]),  vCurrent(new float[ly*lz]),  wCurrent(new float[ly*lz]),
-	uPreviousSpatialBoundary(new float[ly*lz]), vPreviousSpatialBoundary(new float[ly*lz]), wPreviousSpatialBoundary(new float[ly*lz]),
-	uPreviousTemporalBoundary(new float[ly*lz]), vPreviousTemporalBoundary(new float[ly*lz]), wPreviousTemporalBoundary(new float[ly*lz]),
-	uCurrent_d(NULL), uCurrentTemp_d(NULL), vCurrent_d(NULL), wCurrent_d(NULL),
-	uPreviousSpatialBoundary_d(NULL), vPreviousSpatialBoundary_d(NULL), wPreviousSpatialBoundary_d(NULL),
-	uPreviousTemporalBoundary_d(NULL),vPreviousTemporalBoundary_d(NULL), wPreviousTemporalBoundary_d(NULL),
-	tempCPU_uCurrent_d(NULL), tempCPU_vCurrent_d(NULL), tempCPU_wCurrent_d(NULL),
-	tempCPU_uPreviousTemporalBoundary_d(NULL), tempCPU_vPreviousTemporalBoundary_d(NULL), tempCPU_wPreviousTemporalBoundary_d(NULL),
-	tempCPU_uPreviousSpatialBoundary_d(NULL), tempCPU_vPreviousSpatialBoundary_d(NULL), tempCPU_wPreviousSpatialBoundary_d(NULL),
-	tempCheckDensity_d(NULL), tempCheckDensity_d_full(NULL),
-	Ux(new float[lx*ly*lz]),
-	Uy(new float[lx*ly*lz]),
-	Uz(new float[lx*ly*lz]),
-	Pressure(new float[lx*ly*lz]),
-	Wx(new float[lx*ly*lz]),
-	Wy(new float[lx*ly*lz]),
-	Wz(new float[lx*ly*lz]) {
+	obstacles( new int[lz * ly * lx] { }),
+	obstacles_d(NULL),
+	uCurrent( new float[ly * lz] { }),
+	vCurrent( new float[ly * lz] { }),
+	wCurrent( new float[ly * lz] { }),
+	uPreviousSpatialBoundary( new float[ly * lz] { }),
+	vPreviousSpatialBoundary( new float[ly * lz] { }),
+	wPreviousSpatialBoundary( new float[ly * lz] { }),
+	uPreviousTemporalBoundary( new float[ly * lz] { }),
+	vPreviousTemporalBoundary( new float[ly * lz] { }),
+	wPreviousTemporalBoundary( new float[ly * lz] { }),
+	uCurrent_d(NULL),
+	uCurrentTemp_d(NULL),
+	vCurrent_d(NULL),
+	wCurrent_d(NULL),
+	uPreviousSpatialBoundary_d(NULL),
+	vPreviousSpatialBoundary_d(NULL),
+	wPreviousSpatialBoundary_d(NULL),
+	uPreviousTemporalBoundary_d(NULL),
+	vPreviousTemporalBoundary_d(NULL),
+	wPreviousTemporalBoundary_d(NULL),
+	tempCPU_uCurrent_d(NULL),
+	tempCPU_vCurrent_d(NULL),
+	tempCPU_wCurrent_d(NULL),
+	tempCPU_uPreviousTemporalBoundary_d(NULL),
+	tempCPU_vPreviousTemporalBoundary_d(NULL),
+	tempCPU_wPreviousTemporalBoundary_d(NULL),
+	tempCPU_uPreviousSpatialBoundary_d(NULL),
+	tempCPU_vPreviousSpatialBoundary_d(NULL),
+	tempCPU_wPreviousSpatialBoundary_d(NULL),
+	tempCheckDensity_d(NULL),
+	tempCheckDensity_d_full(NULL),
+	Ux( new float[lx * ly * lz] { }),
+	Uy(new float[lx * ly * lz] { }),
+	Uz( new float[lx * ly * lz] { }),
+	Pressure( new float[lx * ly * lz] { }),
+	Wx( new float[lx * ly * lz] { }),
+	Wy( new float[lx * ly * lz] { }),
+	Wz( new float[lx * ly * lz] { }) {
 
 	cout << "***LBM Starting***" << endl;
 
 	time (&timeStart);
-
-	readExternalConfigurationFileForTheSolver("./input/LBMConfiguration.inp");
 
 	resetConvergenceFile();
 
@@ -107,7 +162,7 @@ void LBM::initialiseMicroscopicDensityArraysInTheHost() {
 	 * @return none
 	 */
 
-	int x, y, z;
+	int x { }, y { }, z { };
 
 	for (z = 0; z < lz ; ++z) {
 		for (y = 0; y < ly; ++y) {
@@ -295,54 +350,6 @@ void LBM::resetConvergenceFile() {
 
 }
 
-void LBM::readExternalConfigurationFileForTheSolver(const string filename) {
-
-	/**
-	 * @brief Reads the input values from the LBMGeometry.inp input file.
-	 * @param filename (const str) path to the input file
-	 * @return none
-	 */
-
-	vector<string> configurationParameters;
-	ifstream configurationFile(filename.c_str());
-	string buffer;
-	if(configurationFile.is_open()){
-		while (configurationFile >> buffer) {
-			configurationParameters.push_back(buffer);
-		}
-		cout << "Configuration parameters read from: " << filename.c_str() << endl;
-		maxIterations = atoi(configurationParameters[0].c_str());
-		cout << "\t Max iterations: " << maxIterations << endl;
-
-		/* Check step: perform density check and export */
-		checkStep = atoi(configurationParameters[1].c_str());
-		cout << "\t Check step: " << checkStep << endl;
-
-		nu = atof(configurationParameters[2].c_str());
-		cout << "\t nu: " << nu << endl;
-
-		rSmall = atof(configurationParameters[3].c_str());
-		cout << "\t rSmall: " << rSmall << endl;
-
-		reynoldsNb = atof(configurationParameters[4].c_str());
-		cout << "\t reynoldsNb: " << reynoldsNb << endl;
-
-		s = atof(configurationParameters[5].c_str());
-		cout << "\t s: " << s << endl;
-
-		baffle = atoi(configurationParameters[6].c_str());
-		cout << "\t baffle position on X=" << baffle << endl;
-
-		threadsPerKernel = atoi(configurationParameters[7].c_str());
-		cout << "\t CUDA threads per kernel: " << threadsPerKernel << endl;
-
-		caseName = configurationParameters[8].c_str();
-		cout << "Case: " << caseName << endl;
-
-		cout << "In total: " << configurationParameters.size() << " parameters were read" << endl;
-		configurationFile.close();
-	}
-}
 
 void LBM::createAnExampleConfigurationFile(const string exampleFileName) {
 
