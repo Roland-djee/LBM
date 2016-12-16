@@ -1,4 +1,4 @@
-/*! \mainpage Lattice-Boltzmann Method code in C++ for mesoscopic fluid dynamics
+/*! \mainpage C++ Lattice-Boltzmann Method for mesoscopic fluid dynamics
  *   	
  *
  * \section intro_sec Introduction
@@ -37,6 +37,11 @@
  * @code
  * gtest >> right-click >> Properties >> C/C++ Build >> Settings >> C++ Compiler >> Includes >> Includepaths (-l) >> workspace (and gtest)
  * @endcode
+ * Check the gtest folder to the src path:
+ * @code
+ * src >> right-click >> Properties >> C/C++ Build >> Settings >> C++ Compiler >> Includes >> Includepaths (-l) >> workspace (and gtest)
+ * @endcode
+ * This is because some part of unit testing LBM private members are LBM methods.
  *
  * \section building Building the code
  * Check the include folder to the src path:

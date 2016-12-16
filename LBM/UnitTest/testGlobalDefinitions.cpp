@@ -64,7 +64,7 @@ TEST(readExternalConfigurationFileForTheSolver, positive) {
 }
 
 
-TEST(LBMInstatiationTest, positive) {
+TEST(LBMInstantiationPublicVariablesTest, positive) {
 
 	/* Declare and arbitrarily initialise domain values */
 	int lx { 100 };
@@ -112,4 +112,38 @@ TEST(LBMInstatiationTest, positive) {
 
 }
 
+TEST(LBMInstantiationPrivateVariablesTest, positive) {
+
+	/* Declare and arbitrarily initialise domain values */
+	int lx { 100 };
+	int ly { 200 };
+	int lz { 300 };
+	int maxIterations { 110 };
+	int	checkStep { 210 };
+	int	baffle { 310 };
+	int	threadsPerKernel { 410 };
+	float nu { 1. };
+	float rSmall { 2. };
+	float reynoldsNb { 3. };
+	float s { 4. };
+	string	caseName { "testCase" };
+	float density { 1.0 };
+	float t0      { 1.0/3.0 };
+	float t1      { 1.0/18.0 };
+	float t2      { 1.0/36.0 };
+	float cSqr    { 1.0/3.0 };
+
+	/* Instantiate and run the LBM */
+	LBM myLBM (lx, ly, lz, maxIterations, checkStep, nu, rSmall,
+				reynoldsNb, s, baffle, threadsPerKernel, caseName,
+				density, t0, t1, t2, cSqr);
+
+	/* Check the initialisation of private variables which have been made public
+	 * for the purpose of testing.*/
+
+	myLBM.testInitialisationOfPrivateMembers();
+
+
+
+}
 

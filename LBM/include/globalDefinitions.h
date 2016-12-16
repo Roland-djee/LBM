@@ -81,6 +81,8 @@ public:
 
 	~LBM();
 
+	void testInitialisationOfPrivateMembers();
+
 private:
 
 	/* Primary variables */

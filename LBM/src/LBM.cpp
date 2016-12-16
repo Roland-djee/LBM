@@ -5,6 +5,7 @@
  * @author Roland Guichard
  */
 
+#include "gtest.h"
 #include "globalDefinitions.h"
 
 LBM::LBM(const int& LX, const int& LY, const int& LZ, const int& MAXITERATIONS,
@@ -34,6 +35,7 @@ LBM::LBM(const int& LX, const int& LY, const int& LZ, const int& MAXITERATIONS,
 	 * @param CSQR (const flt)
 	 * @return none
 	 */
+//	Public variables
 	lx { LX },
 	ly { LY },
 	lz { LZ },
@@ -53,16 +55,13 @@ LBM::LBM(const int& LX, const int& LY, const int& LZ, const int& MAXITERATIONS,
 	reynoldsNb { REYNOLDSNB },
 	s { S },
 	caseName { CASENAME },
-	/* Private variables */
+
+//	Private variables
 	timeUnit { 0 },
 	twoDimensionalLength { ly * lz },
 	threeDimensionalLength { lx * ly * lz },
 	floatingSliceSize(twoDimensionalLength*sizeof(float)),
 	intArraySize(threeDimensionalLength*sizeof(int)),
-//	nu(0.0175),
-//	rSmall(6.67897),
-//	reynoldsNb(195.732),
-//	s(23.7849),
 	density(DENSITY),
 	prDiff(0.0),
 	prOut(0.0),
@@ -71,17 +70,18 @@ LBM::LBM(const int& LX, const int& LY, const int& LZ, const int& MAXITERATIONS,
 	t0 { density * T0 },
 	t1 { density * T1 },
 	t2 { density * T2 },
-	cSqr(),
+	cSqr(CSQR),
 	reciprocalCSqr(1.0 / cSqr),
 	tau(3.0*nu + 0.5),
 	omega(1.0/tau),
 	oneMinusOmega (1.0-omega),
+	/* Lattice instantiations */
 	D3(lx, ly, lz),
 	D3Help(lx, ly, lz),
 	D3_d(lx, ly, lz, 0),
 	D3Help_d(lx, ly, lz, 0),
 	/* Pointers */
-	obstacles( new int[lz * ly * lx] { }),
+	obstacles(new int[lz * ly * lx] { }),
 	obstacles_d(NULL),
 	uCurrent( new float[ly * lz] { }),
 	vCurrent( new float[ly * lz] { }),
@@ -130,6 +130,8 @@ LBM::LBM(const int& LX, const int& LY, const int& LZ, const int& MAXITERATIONS,
 //	calculate_CUDA_quantities();
 //	display_CUDA_specifications();
 
+	testInitialisationOfPrivateMembers();
+
 	initialiseAllDataArrays();
 	displayLBMSpecifications();
 	abstractInitialise();
@@ -137,6 +139,29 @@ LBM::LBM(const int& LX, const int& LY, const int& LZ, const int& MAXITERATIONS,
 
 LBM::~LBM() {
 
+}
+
+void LBM::testInitialisationOfPrivateMembers() {
+
+	EXPECT_EQ(0, timeUnit);
+	EXPECT_EQ(ly * lz, twoDimensionalLength);
+	EXPECT_EQ(lx * ly * lz, threeDimensionalLength);
+	EXPECT_EQ(twoDimensionalLength*sizeof(float), floatingSliceSize);
+	EXPECT_EQ(threeDimensionalLength*sizeof(int), intArraySize);
+	EXPECT_EQ(density, density);
+	EXPECT_EQ(0.0, prDiff);
+	EXPECT_EQ(0.0, prOut);
+	EXPECT_EQ(0.0, prIn);
+	EXPECT_EQ(0.0, vor);
+	EXPECT_EQ(density * t0, t0);
+	EXPECT_EQ(density * t1, t1);
+	EXPECT_EQ(density * t2, t2);
+
+	EXPECT_EQ(cSqr, cSqr);
+	EXPECT_FLOAT_EQ(1./cSqr, reciprocalCSqr);
+	EXPECT_FLOAT_EQ(3.0*nu + 0.5, tau);
+	EXPECT_FLOAT_EQ(1./(3.0*nu + 0.5), omega);
+	EXPECT_FLOAT_EQ(1.-1./(3.0*nu + 0.5), oneMinusOmega);
 }
 
 void LBM::abstractInitialise() {
