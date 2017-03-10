@@ -4,5 +4,5 @@ compiler:
   - gcc
 script:
   - cd LBM
-  - cd UnitTest
-  - ./gTestAll
+  - cd Release
+  - ./LBM.exe
