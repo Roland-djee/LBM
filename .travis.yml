@@ -3,5 +3,6 @@ language:
 compiler: 
   - gcc
 script:
+  - cd LBM
   - cd UnitTest
-  - gTestAll.cpp
+  - ./gTestAll
