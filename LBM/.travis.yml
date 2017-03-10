@@ -1,3 +1,7 @@
-language: cpp
-compiler: gcc
-./UnitTest && gTestAll.cpp
+language: 
+  - cpp
+compiler: 
+  - gcc
+script:
+  - cd UnitTest
+  - gTestAll.cpp
