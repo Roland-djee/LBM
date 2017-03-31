@@ -5,9 +5,9 @@ compiler:
 script:
   - cd LBM
   - g++ -Igtest -Iinclude -std=gnu++0x -O3 -Wall -c -fmessage-length=0 -o UnitTest/gTestAll.o UnitTest/gTestAll.cpp
-  - g++ -Iinclude -Igtest -O3 -Wall -c -fmessage-length=0 -o src/fileReader.o src/fileReader.cpp
-  - g++ -Igtest -Iinclude -O3 -Wall -c -fmessage-length=0 -o UnitTest/testGlobalDefinitions.o UnitTest/testGlobalDefinitions.cpp
-  - g++ -Iinclude -Igtest -O3 -Wall -c -fmessage-length=0 -o src/lattice.o src/lattice.cpp
-  - g++ -Igtest -O3 -Wall -c -fmessage-length=0 -o gtest/gtest-all.o gtest/gtest-all.cc
-  - g++ -Iinclude -Igtest -O3 -Wall -c -fmessage-length=0 -o src/LBM.o src/LBM.cpp
+  - g++ -Iinclude -Igtest -std=gnu++0x -O3 -Wall -c -fmessage-length=0 -o src/fileReader.o src/fileReader.cpp
+  - g++ -Igtest -Iinclude -std=gnu++0x -O3 -Wall -c -fmessage-length=0 -o UnitTest/testGlobalDefinitions.o UnitTest/testGlobalDefinitions.cpp
+  - g++ -Iinclude -Igtest -std=gnu++0x -O3 -Wall -c -fmessage-length=0 -o src/lattice.o src/lattice.cpp
+  - g++ -Igtest -std=gnu++0x -O3 -Wall -c -fmessage-length=0 -o gtest/gtest-all.o gtest/gtest-all.cc
+  - g++ -Iinclude -Igtest -std=gnu++0x -O3 -Wall -c -fmessage-length=0 -o src/LBM.o src/LBM.cpp
   - g++ -o LBM.exe UnitTest/gTestAll.o UnitTest/testGlobalDefinitions.o gtest/gtest-all.o src/LBM.o src/fileReader.o src/lattice.o 
