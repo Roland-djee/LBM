@@ -4,4 +4,4 @@ compiler:
   - gcc
 script:
   - cd LBM
-  - g++ "-IC:\\Users\\RolandGuichard\\git\\LBM\\LBM\\gtest" "-IC:\\Users\\RolandGuichard\\git\\LBM\\LBM\\include" -O3 -Wall -c -fmessage-length=0 -o "UnitTest\\gTestAll.o" "..\\UnitTest\\gTestAll.cpp"
+  - g++ "-IC:\\gtest" "-IC:\\include" -O3 -Wall -c -fmessage-length=0 -o "UnitTest\\gTestAll.o" "\\UnitTest\\gTestAll.cpp"
