@@ -10,4 +10,4 @@ script:
   - g++ -Iinclude -Igtest -std=gnu++0x -O3 -Wall -c -fmessage-length=0 -o src/lattice.o src/lattice.cpp
   - g++ -Igtest -std=gnu++0x -O3 -Wall -c -fmessage-length=0 -o gtest/gtest-all.o gtest/gtest-all.cc
   - g++ -Iinclude -Igtest -std=gnu++0x -O3 -Wall -c -fmessage-length=0 -o src/LBM.o src/LBM.cpp
-  - g++ -o -pthread LBM.exe UnitTest/gTestAll.o UnitTest/testGlobalDefinitions.o gtest/gtest-all.o src/LBM.o src/fileReader.o src/lattice.o 
+  - g++ -o LBM.exe UnitTest/gTestAll.o UnitTest/testGlobalDefinitions.o gtest/gtest-all.o src/LBM.o src/fileReader.o src/lattice.o -pthread
