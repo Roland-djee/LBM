@@ -4,4 +4,10 @@ compiler:
   - gcc
 script:
   - cd LBM
-  - g++ "-IC:\\gtest" "-IC:\\include" -O3 -Wall -c -fmessage-length=0 -o "UnitTest\\gTestAll.o" "\\UnitTest\\gTestAll.cpp"
+  - g++ "-IC:gtest" "-IC:include" -O3 -Wall -c -fmessage-length=0 -o "UnitTest/gTestAll.o" "UnitTest/gTestAll.cpp"
+  - g++ "-IC:include" "-IC:gtest" -O3 -Wall -c -fmessage-length=0 -o "src/fileReader.o" "src/fileReader.cpp"
+  - g++ "-IC:gtest" "-IC:include" -O3 -Wall -c -fmessage-length=0 -o "UnitTest/testGlobalDefinitions.o" "UnitTest/testGlobalDefinitions.cpp"
+  - g++ "-IC:include" "-IC:gtest" -O3 -Wall -c -fmessage-length=0 -o "src/lattice.o" "src/lattice.cpp"
+  - g++ "-IC:gtest" -O3 -Wall -c -fmessage-length=0 -o "gtest/gtest-all.o" "gtest/gtest-all.cc"
+  - g++ "-IC:include" "-IC:gtest" -O3 -Wall -c -fmessage-length=0 -o "src/LBM.o" "src/LBM.cpp"
+  - g++ -o LBM.exe "UnitTest/gTestAll.o" "UnitTest/testGlobalDefinitions.o" "gtest/gtest-all.o" "src/LBM.o" "src/fileReader.o" "src/lattice.o" 
